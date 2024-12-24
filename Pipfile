@@ -1,0 +1,36 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+celery = "*"
+requests = "*"
+bs4 = "*"
+pymongo = {extras = ["srv"], version = "*"}
+lxml = "*"
+python-dateutil = "*"
+python-slugify = "*"
+tweepy = "*"
+textblob = "*"
+openai = "*"
+pytrends = "*"
+redis = "*"
+slugify = "*"
+google-api-python-client = "*"
+google-auth-oauthlib = "*"
+isodate = "*"
+youtube_transcript_api = "*"
+opencv-python-headless="*"
+pytube = "*"
+numpy = "*"
+gtts  = "*"
+pyttsx3 = "*"
+pyobjc = "*"
+requests_oauthlib = "*"
+oauth2client = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

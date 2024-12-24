@@ -1,0 +1,17 @@
+__pycache__
+__pycache__/*
+.secrets.temp
+/dump
+.DS_Store
+client_secret_*.json
+/youtube_screenshots/*
+celeryd
+celerybeat-schedule
+celery.service
+celeryauth.yaml
+wcserviceacct*.json
+token.json
+/sites/*/*.json
+/sites/*/beat-schedule
+.env*
+TODO.txt
