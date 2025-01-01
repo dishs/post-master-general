@@ -34,7 +34,7 @@ class BaseProcessor:
         self.sources = SourceManager(owner=self.config['owner'])
         self.youtube_api = YouTubeAPI(config=config)
         self.youtube_videos = YouTubeVideoManager(owner=self.config['owner'])
-        self.youtube_playlists = YouTubePlaylistManager()
+        self.youtube_playlists = YouTubePlaylistManager(owner=self.config['owner'])
 
     def fetch_and_process_feeds(self):
         try:
@@ -42,7 +42,7 @@ class BaseProcessor:
             self.fetch_rss_videos()
             self.get_video_details()
             self.print_youtube_video_statistics()
-            # self.upload_youtube_playlist()
+            # self.upload_youtube_playlist() # moved to individual site processors
             self.logger.vomit(f"BaseProcessor:{self.config['display_name']}: fetch_and_process_feeds() completed.")
         except Exception as e:
             self.logger.vomit(f"BaseProcessor:{self.config['display_name']}: fetch_and_process_feeds() failed.")
@@ -54,9 +54,9 @@ class BaseProcessor:
             self.logger.vomit(f"BaseProcessor:{self.config['display_name']}: update_and_publish_site()")
             self.refresh_video_statistics()
             self.get_channel_statistics()
-            # self.sync_s3_screenshots()
             self.get_video_comments_summary()
-            # self.build_website()
+            # self.sync_s3_screenshots() # moved to individual site processors
+            # self.build_website() # moved to individual site processors
             self.logger.vomit(f"BaseProcessor:{self.config['display_name']}: update_and_publish_site() completed.")
         except Exception as e:
             self.logger.vomit(f"BaseProcessor:{self.config['display_name']}: update_and_publish_site() failed.")
@@ -272,7 +272,7 @@ class BaseProcessor:
                 self.logger.vomit(f"Adding video {video['video_id']} to playlist {playlist['playlist_id']}")
                 result = self.youtube_api.add_video_to_youtube_playlist(playlist, video['video_id'])
                 if result:
-                    youtube_playlists.updateYoutubePlaylist(playlist['playlist_id'], video['video_id'])
+                    self.youtube_playlists.update_youtube_playlist(playlist['playlist_id'], video['video_id'])
                 sleep(3)
 
     def print_youtube_video_statistics(self):
@@ -282,22 +282,22 @@ class BaseProcessor:
 
     def sync_s3_screenshots(self):
         self.logger.vomit(f"Uploading screenshots to S3...")
-        command = self.config.commands['s3_sync_screenshots']
+        command = self.config['commands']['s3_sync_screenshots']
         subprocess.run(command, shell=True)
 
     def build_website(self):
         self.logger.vomit(f"Building and Deploying website...")
-        command = self.config.commands['build_website']
+        command = self.config['commands']['build_website']
         subprocess.run(command, shell=True)
 
     def sync_s3_videos(self):
         self.logger.vomit(f"Uploading videos to S3...")
-        command = self.config.commands['s3_sync_videos']
+        command = self.config['commands']['s3_sync_videos']
         subprocess.run(command, shell=True)
 
     def render_video(self):
         self.logger.vomit(f"Rendering Video...")
-        command = self.config.commands['render_video']
+        command = self.config['commands']['render_video']
         subprocess.run(command, shell=True)
         self.sync_s3_videos()
         todays_date = (datetime.utcnow() - timedelta(days=1)).strftime("%m/%d/%Y")

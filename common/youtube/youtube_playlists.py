@@ -1,12 +1,16 @@
 import common.dbconn as dbconn
-import common.utils as utils
+from common.utils import LoggerUtility
 from datetime import datetime
 
 class YouTubePlaylistManager:
+    def __init__(self, owner=None):
+        self.owner = owner
+        self.logger = LoggerUtility()
 
     def save_youtube_playlist(self, playlist):
-        utils.vomit(f"adding {playlist['playlist_id']}")
+        self.logger.vomit(f"adding {playlist['playlist_id']}")
         result = dbconn.dbYoutubePlaylists.insert_one({
+            'owner': self.owner,
             'playlist_id': playlist['playlist_id'],
             'playlist_date': playlist['playlist_date'],
             'videos': []
@@ -16,6 +20,7 @@ class YouTubePlaylistManager:
     def get_youtube_playlist(self, created_date):
         playlist_date = created_date.strftime("%m/%d/%Y")
         result = dbconn.dbYoutubePlaylists.find_one({
+            'owner': self.owner,
             'playlist_date': playlist_date
         })
         return result if result else False

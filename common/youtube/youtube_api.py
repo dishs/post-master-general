@@ -53,7 +53,8 @@ class YouTubeAPI:
             print(f"An unexpected error occurred: {e}")
 
     def get_channel_details(self, channel_id):
-        youtube = build(self.service_name, self.api_version, developerKey=self.api_key)
+        credentials = self.get_credentials() 
+        youtube = build(self.service_name, self.api_version, credentials=credentials)
         try:
             response = youtube.channels().list(part="snippet,contentDetails,statistics", id=channel_id).execute()
             if response["items"]:
@@ -66,7 +67,8 @@ class YouTubeAPI:
         return None, None, None, None, None, None
 
     def get_video_details(self, video_id):
-        youtube = build(self.service_name, self.api_version, developerKey=self.api_key)
+        credentials = self.get_credentials()
+        youtube = build(self.service_name, self.api_version, credentials=credentials)
         try:
             response = youtube.videos().list(part="snippet,contentDetails,statistics", id=video_id).execute()
             if response["items"]:
@@ -80,7 +82,8 @@ class YouTubeAPI:
         return False, None, True, None, None, None
 
     def get_comments(self, video_id, order='relevance'):
-        youtube = build(self.service_name, self.api_version, developerKey=self.api_key)
+        credentials = self.get_credentials()
+        youtube = build(self.service_name, self.api_version, credentials=credentials)
         try:
             results = youtube.commentThreads().list(part="snippet", videoId=video_id, maxResults=21, textFormat="plainText", order=order).execute()
             return [{'author': item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"],
@@ -123,11 +126,17 @@ class YouTubeAPI:
         total_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
         frame_rate = int(vidcap.get(cv2.CAP_PROP_FPS))
         video_duration = total_frames / frame_rate
-        interval = video_duration / (num_screenshots + 1)
+        
+        # Define start and end points to skip the first and last 10 seconds
+        start_time = 10
+        end_time = video_duration - 10
+        
+        # Adjust the interval calculation to only consider the segment between start_time and end_time
+        interval = (end_time - start_time) / (num_screenshots + 1)
 
         os.makedirs(f"youtube_screenshots/{self.config['owner']}/{video_id}", exist_ok=True)
 
-        sec = 0
+        sec = start_time
         count = 0
         screenshot_paths = []
         while count < num_screenshots:
@@ -145,14 +154,19 @@ class YouTubeAPI:
         has_frames, image = vidcap.read()
 
         while has_frames:
-            if not (np.all(image <= [43, 43, 43]) or np.all(image >= [233, 233, 233])):
+            # Check for predominantly single color presence
+            blue_channel, green_channel, red_channel = cv2.split(image)
+            if (np.all(image <= [43, 43, 43]) or 
+                np.all(image >= [233, 233, 233]) or 
+                np.std(red_channel) < 10 and np.std(blue_channel) < 10 and np.std(green_channel) < 10):
+                # Skip over frames that are too dark, too bright, or predominantly one color
+                vidcap.set(cv2.CAP_PROP_POS_FRAMES, vidcap.get(cv2.CAP_PROP_POS_FRAMES) + 10)
+                has_frames, image = vidcap.read()
+            else:
                 filepath = f"youtube_screenshots/{self.config['owner']}/{video_id}/image{count}.webp"
                 cv2.imwrite(filepath, image, [cv2.IMWRITE_WEBP_QUALITY, 20])
                 print(f'Screenshot saved at {filepath}')
                 return True
-            else:
-                vidcap.set(cv2.CAP_PROP_POS_FRAMES, vidcap.get(cv2.CAP_PROP_POS_FRAMES) + 10)
-                has_frames, image = vidcap.read()
         return False
 
     def generate_youtube_screenshots(self, number_screenshots, video_url):
@@ -176,7 +190,7 @@ class YouTubeAPI:
 
         if not self.credentials or not self.credentials.valid:
             flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-                self.config['client_secrets']['wc'],
+                f"./sites/{self.config['owner']}/{self.config['keys']['google_oath_client']}",
                 scopes=["https://www.googleapis.com/auth/youtube.force-ssl"]
             )
             self.credentials = flow.run_local_server(access_type='offline', prompt='consent')
@@ -203,9 +217,10 @@ class YouTubeAPI:
                 part="snippet,status",
                 body={
                     "snippet": {
-                        "title": f"WheelCircuit Daily Drive for {date_today}",
-                        "description": f"The most popular automotive youtube videos for {date_today}, curated for you into a single playlist. Follow us for a new playlist every day!",
-                        "tags": ["WheelCircuit", "Daily Drive"],
+                        "channelId": self.config['keys']['youtube_channel_id'],
+                        "title": f"{self.config['video_processing']['video_title']} for {date_today}",
+                        "description": f"The most popular {self.config['video_processing']['video_genre']} youtube videos for {date_today}, curated for you into a single playlist. Follow us for a new playlist every day!",
+                        "tags": self.config['video_processing']['video_tags'],
                         "defaultLanguage": "en"
                     },
                     "status": {"privacyStatus": "public"}
@@ -225,6 +240,7 @@ class YouTubeAPI:
                 part="snippet,status",
                 body={
                     "snippet": {
+                        "channelId": self.config['keys']['youtube_channel_id'],
                         "playlistId": playlist['playlist_id'],
                         "position": len(playlist['videos']),
                         "resourceId": {"kind": "youtube#video", "videoId": video_id}
@@ -244,7 +260,7 @@ class YouTubeAPI:
         display_date = datetime.utcnow().strftime("%m/%d/%Y")
         friendly_date = datetime.utcnow().strftime("%B %d, %Y")
         scopes = ["https://www.googleapis.com/auth/youtube.upload"]
-        client_secrets_file = self.config['client_secrets']['wc']
+        client_secrets_file = self.config['keys']['google_oath_client']
 
         flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
             client_secrets_file, scopes
@@ -256,6 +272,7 @@ class YouTubeAPI:
             part="snippet,status",
             body={
                 "snippet": {
+                    "channelId": self.config['keys']['youtube_channel_id'],
                     "categoryId": "22",
                     "description": f"The Top 5 most popular automotive Youtube Videos for {friendly_date}. Join us everyday for new videos! #dailydrive \n#wheelcircuit #car #automobile #supercars #vehicles",
                     "title": f"Top Auto Videos for {display_date} - WheelCircuit Daily Drive #dailydrive"

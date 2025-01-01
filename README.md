@@ -65,3 +65,7 @@ mongodump --uri="mongodb://localhost:27017" --db powercompanidb --out /Users/dus
 db.youtubeVideos.createIndex({ published: 1, owner: 1 })
 db.youtubeVideos.createIndex({ createdAt: -1 })
 db.youtubeVideos.createIndex({ published: 1, owner: 1, channel_name: 1 })
+
+
+
+export NODE_OPTIONS='--max-old-space-size=8192'

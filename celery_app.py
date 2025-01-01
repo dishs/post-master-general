@@ -20,7 +20,7 @@ else:
 
 # Set beat_schedule
 app.conf.beat_schedule = beat_schedule
-
+print(f"beat_schedule: {beat_schedule}")
 if __name__ == "__main__":
     app.start()
 

@@ -10,14 +10,10 @@ config = {
     "display_name": "DunkMania",
     "celery_app_name": "dunkmania_blogger",
     "commands": {
-        "s3_sync_screenshots": "aws s3 sync youtube_screenshots/dunkmania/ s3://dunkmania-1/youtube_screenshots --delete",
-        "build_website": "cd /Users/dushyant/Workspace/blogtest-next && bash deploy.sh >> deploy.log 2>&1",
+        "s3_sync_screenshots": "aws s3 sync youtube_screenshots/dunkmania/ s3://dunkmania-1/youtube_screenshots/dunkmania --delete",
+        "build_website": "cd /Users/dushyant/Workspace/dunkmania-web && bash deploy.sh >> deploy.log 2>&1",
     },
-    "video_file_path": "/Users/dushyant/Workspace/movie-maker/dunkmania-daily-drive/out/9x16_video.mp4",
-    "client_secrets": {
-        "ds": "client_secret_389662371587.json",
-        "wc": "wc_client_secret_897321850755-fkm04o26826vkp3g8t910bddvsfe4hju.apps.googleusercontent.com.json"
-    },
+    "video_file_path": "",
     "email": {
         "sender_email": "info@dunkmania.com",
         "receiver_email": "dsingh78@gmail.com",
@@ -30,6 +26,13 @@ config = {
     "keys": {
         "openai": os.getenv('DUNKMANIA_OPENAI_API_KEY'),
         "youtube_api_key": os.getenv('DUNKMANIA_YOUTUBE_API_KEY'),
-        "google_service_account": ""
+        "youtube_channel_id": "UCKY25K8JAWHq42-nb-rJueg",
+        "google_service_account": "",
+        "google_oath_client": "client_secret_120069711825-oi2njk5lrrhs3ru160ropfv9r2agpan0.apps.googleusercontent.com.json"
+    },
+    "video_processing": {
+        "video_title": "DunkMania Daily Handles",
+        "video_genre": "basketball",
+        "video_tags": ["DunkMania", "Daily Handles", "NBA analysis", "Basketball commentary", "LeBron James critique", "NBA player evaluations", "Basketball breakdowns", "NBA game reviews", "Basketball fan opinions", "NBA discussions", "Basketball insights"]
     }
 }

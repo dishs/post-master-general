@@ -7,6 +7,7 @@ beat_schedule = {
     },
     'process-videos': {
         'task': 'sites.wheelcircuit.tasks.process_videos_task',
-        'schedule': crontab(hour='*/1'),  # Every hour
+        # 'schedule': crontab(minute=0, hour='*/1'),  # Every hour
+        'schedule': crontab(minute=0, hour='0,8,16'),
     },
 }
