@@ -9,6 +9,7 @@ config = {
     "owner": "dunkmania",
     "display_name": "DunkMania",
     "celery_app_name": "dunkmania_blogger",
+    "persona": "Jeremy Clarkson",
     "commands": {
         "s3_sync_screenshots": "aws s3 sync youtube_screenshots/dunkmania/ s3://dunkmania-1/youtube_screenshots/dunkmania --delete",
         "build_website": "cd /Users/dushyant/Workspace/dunkmania-web && bash deploy.sh >> deploy.log 2>&1",

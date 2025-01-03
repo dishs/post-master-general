@@ -9,6 +9,7 @@ config = {
     "owner": "slappytrillmore",
     "display_name": "SlappyTrillmore",
     "celery_app_name": "slappytrillmore_blogger",
+    "persona": "Jeremy Clarkson",
     "commands": {
         "s3_sync_screenshots": "aws s3 sync youtube_screenshots/slappytrillmore/ s3://slappytrillmore-1/youtube_screenshots/slappytrillmore --delete",
         "build_website": "cd /Users/dushyant/Workspace/slappytrillmore-web && bash deploy.sh >> deploy.log 2>&1",

@@ -13,6 +13,8 @@ app.config_from_object(celery_config)
 site = os.getenv('SITE')
 if site == 'slappytrillmore':
     from sites.slappytrillmore.beat_schedule import beat_schedule
+elif site == 'bevelfish':
+    from sites.bevelfish.beat_schedule import beat_schedule
 elif site == 'dunkmania':
     from sites.dunkmania.beat_schedule import beat_schedule
 else:

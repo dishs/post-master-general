@@ -75,6 +75,11 @@ class YouTubeVideoManager:
         update_fields = {
             '_id': video['_id']
         }
+
+        view_count = int(video['view_count']) if video['view_count'] is not None else 0
+        like_count = int(video['like_count']) if video['like_count'] is not None else 0
+        comment_count = int(video['comment_count']) if video['comment_count'] is not None else 0
+
         if video['short']:
             update_data = {
                 '$set': {
@@ -102,9 +107,9 @@ class YouTubeVideoManager:
                     'short_summary': video['short_summary'],
                     'blog_title': video['blog_title'],
                     'screenshots': video['screenshots'],
-                    'view_count': int(video['view_count']),
-                    'like_count': int(video['like_count']),
-                    'comment_count': int(video['comment_count'])
+                    'view_count': view_count,
+                    'like_count': like_count,
+                    'comment_count': comment_count
                 }
             }
         dbconn.dbYoutubeVideos.update_one(update_fields, update_data)
@@ -128,11 +133,15 @@ class YouTubeVideoManager:
         })
 
     def update_video_statistics(self, video):
+        view_count = int(video['view_count']) if video['view_count'] is not None else 0
+        like_count = int(video['like_count']) if video['like_count'] is not None else 0
+        comment_count = int(video['comment_count']) if video['comment_count'] is not None else 0
+
         dbconn.dbYoutubeVideos.update_one({'_id': video['_id']}, {
             '$set': {
-                'view_count': int(video['view_count']),
-                'like_count': int(video['like_count']),
-                'comment_count': int(video['comment_count'])
+                'view_count': view_count,
+                'like_count': like_count,
+                'comment_count': comment_count
             }
         })
 

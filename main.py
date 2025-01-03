@@ -4,6 +4,7 @@ import celery_app  # Ensures Celery is initialized properly
 def main():
     site_modules = {
         "wheelcircuit": sites.wheelcircuit,
+        "bevelfish": sites.bevelfish,
         "dunkmania": sites.dunkmania,
         "slappytrillmore": sites.slappytrillmore,
     }

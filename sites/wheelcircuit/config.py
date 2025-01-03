@@ -9,6 +9,7 @@ config = {
     "owner": "wheelcircuit",
     "display_name": "WheelCircuit",
     "celery_app_name": "wheelcircuit_blogger",
+    "persona": "Jeremy Clarkson",
     "commands": {
         "s3_sync_screenshots": "aws s3 sync youtube_screenshots/wheelcircuit/ s3://wheelcircuit-1/youtube_screenshots --delete",
         "s3_sync_videos": "aws s3 sync /Users/dushyant/Workspace/movie-maker/wheelcircuit-daily-drive/out/ s3://wheelcircuit-1/daily_videos --delete",

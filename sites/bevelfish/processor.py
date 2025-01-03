@@ -1,6 +1,6 @@
 from common.processor import BaseProcessor
 
-class DunkManiaProcessor(BaseProcessor):
+class BevelFishProcessor(BaseProcessor):
     def __init__(self, config):
         super().__init__(config)
 

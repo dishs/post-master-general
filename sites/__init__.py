@@ -12,3 +12,8 @@ from .dunkmania.processor import DunkManiaProcessor
 from .dunkmania.tasks import fetch_videos_task, process_videos_task
 from .dunkmania.config import config
 from .dunkmania.beat_schedule import beat_schedule
+
+from .bevelfish.processor import BevelFishProcessor
+from .bevelfish.tasks import fetch_videos_task, process_videos_task
+from .bevelfish.config import config
+from .bevelfish.beat_schedule import beat_schedule
