@@ -1,5 +1,5 @@
-from .processor import BevelFishProcessor
+from .processor import GlossyDermProcessor
 from .config import config
 
 def get_processor():
-    return BevelFishProcessor(config)
+    return GlossyDermProcessor(config)

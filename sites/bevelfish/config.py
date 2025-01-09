@@ -22,7 +22,7 @@ config = {
         "smtp_port": 587,
         "smtp_username": os.getenv('BEVELFISH_SMTP_USERNAME'),
         "smtp_password": os.getenv('BEVELFISH_SMTP_PASSWORD'),
-        "admin_link": "http://localhost:1337/admin/plugins/content-manager/collectionType/application::youtube-videos.youtube-videos?page=1&pageSize=100&_sort=draft:DESC&_where[0][processed]=true&_where[1][draft]=true"
+        "admin_link": "http://localhost:1337/admin/plugins/content-manager/collectionType/application::youtube-videos.youtube-videos?page=1&pageSize=100&_sort=draft:DESC&_where[0][processed]=true&_where[1][draft]=false&_where[2][isShort]=false&_where[3][owner]=bevelfish"
     },
     "keys": {
         "openai": os.getenv('BEVELFISH_OPENAI_API_KEY'),
