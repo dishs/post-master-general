@@ -12,6 +12,6 @@ class HoytAndStateProcessor(BaseProcessor):
     def update_and_publish_site(self):
         super().update_and_publish_site()
         # Site-specific video processing logic
-        # self.sync_s3_screenshots()
-        # self.build_website()
-        # print(f"{self.config['owner']} updated and published.")
+        self.sync_s3_screenshots()
+        self.build_website()
+        print(f"{self.config['owner']} updated and published.")
